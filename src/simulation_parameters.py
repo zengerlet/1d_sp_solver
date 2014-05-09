@@ -4,13 +4,13 @@ STRUCTURE = 'STRUCT1'
 
 #### Global simulation parameters ####
 
-nel = 40000							# Number of elements
+nel = 10000							# Number of elements
 nomaxit = 1500 						# maximum number of iteration
 nocs = 5							# number of considered states
 t = 1.3 							# temperature
 alpha = 0.1	 						# initial mixing factor for poisson solution
 interactive_alpha = False 			# interactively adjusting alpha
-beta = 0.2   						# initial mixing factor for eDensity solution
+beta = 0.1   						# initial mixing factor for eDensity solution
 interactive_beta = False 			# interactively adjusting beta
 target_error_p = 1e-6 				# traget error for poisson equation
 target_error_d = 1e18 				# traget error for eDensity
@@ -31,8 +31,8 @@ erhs = 0						# energy of conduction band rhs for BCT = 'vn_d'
 
 
 #### Define region where to solve schroedinger equation ####
-dqleft = 2000
-dqright = 3700
+dqleft = 200
+dqright = 380
 
 #### Debug ####
 

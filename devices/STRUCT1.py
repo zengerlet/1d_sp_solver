@@ -84,15 +84,15 @@ class Surface_N(Expression):
 
 #### Define Layers ####
 
-dmax = 16257.
+dmax = 1625.7
 
 layer1 = (0.0,			# GaAs
-	      100.)	
-layer2 = (100., 		# AlGaAs
-		  3200.)	
-layer3 = (3200., 			# GaAs
-		  3600.)			
-layer4 = (3600., 			#AlGaAs
+	      10.)	
+layer2 = (10., 		# AlGaAs
+		  320.)	
+layer3 = (320., 			# GaAs
+		  360.)			
+layer4 = (360., 			#AlGaAs
 		  dmax)	
 
 
@@ -103,7 +103,7 @@ gs = dmax/nel					# Grid spacing
 
 #### Doping ####
 # Define doping layers
-d_pos1 = 2500.
+d_pos1 = 250.
 d_width1 = 1.5
 
 #fraction_in_dx_centers = 0.892
