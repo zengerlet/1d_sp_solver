@@ -1,0 +1,7 @@
+# ignore all files ending with ~
+*~ 
+# ignore all files ending with .pyc .out .txt
+*.pyc
+*.txt
+*.out
+
