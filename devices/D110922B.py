@@ -3,17 +3,25 @@ import numpy as np
 import scipy.integrate as integ
 import scipy.constants as const
 import matplotlib.pyplot as plt
-import time
-import sys
+import time, sys, os
+my_path = os.path.dirname(os.path.realpath(__file__))
+my_path_src = os.path.join(my_path, 'src')
 
-# Import function and material constants from following path
-sys.path.append('/home/thomas/polybox/Semester_8/SA/code/cleanup/src')
+# Import simulation parameter, functions and material constants from following path
+sys.path.append(my_path_src)
 from sp_functions import *
 from material_const import *
-
-# Import global simulation parameters
-sys.path.append('/home/thomas/polybox/Semester_8/SA/code/cleanup')
 from simulation_parameters import *
+
+
+#### Input parameters from command line ####
+fraction_in_dx_centers = float(sys.argv[1])
+#fraction_of_free_charges_on_surface = float(sys.argv[2])
+
+## calculate fraction of free charges going to surface with charge neutrality
+# desired values in well -2.75376e15
+fraction_of_free_charges_on_surface = (-2.75376+(1-fraction_in_dx_centers)*55.53)/((1-fraction_in_dx_centers)*55.53)
+
 
 
 # Define sub-domains and boundaries
@@ -158,21 +166,10 @@ class Band_Energy(Expression):
 		if between(x[0], layer20):
 			value[0] = Al24Ga76Asnn['cb_e']
 
-
-'''
-class Doping_N(Expression):
-	def eval(self, value, x):
-		value[0] = exp(-(x[0]-d_pos1)*(x[0]-d_pos1)/2.0/(d_width1*d_width1))*dop_1 + \
-					exp(-(x[0]-d_pos2)*(x[0]-d_pos2)/2.0/(d_width2*d_width2))*dop_2
-
-'''
-
-
 class Doping_N(Expression):
 	def eval(self, value, x):
 		value[0] = exp(-(x[0]-d_pos1)*(x[0]-d_pos1)/2.0/(d_width1*d_width1))*dop_1/(d_width1*np.sqrt(2*np.pi)) + \
 					exp(-(x[0]-d_pos2)*(x[0]-d_pos2)/2.0/(d_width2*d_width2))*dop_2/(d_width2*np.sqrt(2*np.pi))
-
 
 class Surface_N(Expression):
 	def eval(self, value, x):
@@ -240,35 +237,13 @@ layer19 = (AlAs6LowerCoord+DopingGaAsWidth+AlAsWidth+DopingGaAsWidth,		# AlAs
 layer20 = (AlAs6LowerCoord+DopingGaAsWidth+AlAsWidth+DopingGaAsWidth+AlAsWidth,		# AlGaAs
 		   AlAs6LowerCoord+DopingGaAsWidth+AlAsWidth+DopingGaAsWidth+AlAsWidth+DownOuterSpacerWidth)
 
-
-
 dmax = AlAs6LowerCoord+DopingGaAsWidth+AlAsWidth+DopingGaAsWidth+AlAsWidth+DownOuterSpacerWidth
-
-
-
-#### Input parameters from command line ####
-fraction_in_dx_centers = float(sys.argv[1])
-fraction_of_free_charges_on_surface = float(sys.argv[2])
-
-## calculate fraction of free charges going to surface with charge neutrality
-# desired values in well -2.75376e15
-fraction_of_free_charges_on_surface = (-2.75376+(1-fraction_in_dx_centers)*55.53)/((1-fraction_in_dx_centers)*55.53)
-
-
-print 'fraction_in_dx_centers = ', fraction_in_dx_centers
-print 'fraction_of_free_charges_on_surface = ', fraction_of_free_charges_on_surface
 
 ss = dmax/nel*1e-9 				# Step size for integration
 gs = dmax/nel					# Grid spacing
 
-print 'grid spacing =', gs
-print 'exchange correlation term =', exchange_correlation_term
-print 'charge neutral =', charge_neutral
-
-
 
 #### Doping ####
-
 # Define doping layers
 d_pos1 = CapWidth+OuterSpacerWidth+AlAsWidth+DopingGaAsWidth+AlAsWidth+DopingGaAsWidth-DopingWidth/2-0.6
 d_width1 = .15
@@ -285,5 +260,14 @@ dop_2 = (1.0-fraction_in_dx_centers)*12.34e24
 ### Surface charge ###
 #fraction_of_free_charges_on_surface = 0.8
 surf = fraction_of_free_charges_on_surface*(dop_1+dop_2)
-print 'magnitude surface charge = ', surf
 s_width = .5
+
+
+
+print 'grid spacing =', gs
+print 'exchange correlation term =', exchange_correlation_term
+print 'charge neutral =', charge_neutral
+print 'fraction_in_dx_centers = ', fraction_in_dx_centers
+print 'fraction_of_free_charges_on_surface = ', fraction_of_free_charges_on_surface
+print 'magnitude surface charge = ', surf
+

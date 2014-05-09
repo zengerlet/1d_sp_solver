@@ -5,24 +5,24 @@ import scipy.constants as const
 import matplotlib.pyplot as plt
 import time, sys, os
 my_path = os.path.dirname(os.path.realpath(__file__))
+my_path_src = os.path.join(my_path, 'src')
+my_path_devices = os.path.join(my_path, 'devices')
 
 # Parameter for Fenics
 parameters['reorder_dofs_serial'] = False
 
-# get time program runs
-start_time = time.time()
-
-# Import function from following path
-sys.path.append('/home/thomas/polybox/Semester_8/SA/code/cleanup/src')
+# Import simulation parameter, functions and material constants from following path
+sys.path.append(my_path_src)
 from sp_functions import *
-
-# Import global simulation parameters
-sys.path.append('/home/thomas/polybox/Semester_8/SA/code/cleanup')
+from material_const import *
 from simulation_parameters import *
 
 # Import structure
-sys.path.append('/home/thomas/polybox/Semester_8/SA/code/cleanup/devices')
+sys.path.append(my_path_devices)
 from D110922B import *
+
+# get time program runs
+start_time = time.time()
 
 
 #### Built framework for FEM solver ####
@@ -98,10 +98,6 @@ np.savetxt('doping_n_array_' + str(nel) + '.out',doping_n_array*1e-24)
 surface_charge = Surface_N()
 surface_charge_array = project(surface_charge, V).vector().array()
 
-
-print 'next nano net doping = ', 0.606150e12*10000
-print 'doping net charge = ', netCharge(doping_n_array, ss)
-print 'surface net charge = ', netCharge(surface_charge_array, ss)
 ##################################
 
 
