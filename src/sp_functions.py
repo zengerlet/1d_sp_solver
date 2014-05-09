@@ -120,22 +120,30 @@ def V_ex(eDens_array, epsilon_array_q, m_eff_array_q):
 	'''
 	return V_ex
 
-'''
-def plot_output(x, x_q, pot_tot_array, doping_n_array, eDens_array, nel, ef, time_ex, noit, target_error, error, nocs, E, PSI, ss, nomaxit):
+
+
+def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, time_ex, noit, target_error, 
+				error, nocs, E, PSI, ss, gs, nomaxit, exchange_correlation_term, DEBUG, DEBUG_level, 
+				fraction_in_dx_centers, fraction_of_free_charges_on_surface, surface_charge_array):
 	'Output all relevant information and write into file'
-	plt.figure()
-	plt.plot(x_q, pot_tot_array)
-	for k in xrange(nocs):
-		print "E[" + str(k) + "]=" + str(E[k])
-		plt.plot(x_q, PSI[k]/np.max(abs(PSI[k])) + E[k])
-	plt.title('Conduction band, wave functions, fermi level')	
-	plt.figure()
-	plt.plot(E,'x')
-	plt.title('Eigenvalues')
-	plt.show()
-	myfile = open('output_' + str(nel) + '.txt', 'w')
+	if DEBUG and (DEBUG_level==1 or DEBUG_level==2):
+		plt.figure()
+		plt.plot(x_q, pot_tot_array)
+		for k in xrange(nocs):
+			print "E[" + str(k) + "]=" + str(E[k])
+			plt.plot(x_q, PSI[k]/np.max(abs(PSI[k])) + E[k])
+		plt.title('Conduction band, wave functions, fermi level')	
+		plt.show()
+		
+	if exchange_correlation_term:
+		myfile = open('output_ex_' + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.txt', 'w')
+	else: myfile = open('output_'  + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.txt', 'w')
 	myfile.write('doping net charge = ' + str(netCharge(doping_n_array, ss)) + '\n')
-	myfile.write('eDensity net charge = ' + str(netCharge(eDens_array, ss)) + '\n') 
+	myfile.write('eDensity net charge = ' + str(-netCharge(eDens_array, ss)) + '\n') 
+	myfile.write('surface net charge = ' + str(netCharge(surface_charge_array, ss)) + '\n') 
+	myfile.write('total net charge = ' + str(netCharge(doping_n_array, ss)-netCharge(eDens_array, ss)+netCharge(surface_charge_array, ss)) + '\n')
+	myfile.write('fraction_in_dx_centers = ' + str(fraction_in_dx_centers) + '\n')
+	myfile.write('fraction_of_free_charges_on_surface = ' + str(fraction_of_free_charges_on_surface) + '\n')
 	myfile.write('eigenvalues = ' + str(E) + '\n')
 	myfile.write('converged at step ' + str(noit) + '\n')
 	myfile.write('max number of iterations = ' + str(nomaxit) + '\n')
@@ -143,20 +151,30 @@ def plot_output(x, x_q, pot_tot_array, doping_n_array, eDens_array, nel, ef, tim
 	myfile.write('error = ' + str(error) + '\n')
 	myfile.write('number of elements = ' + str(nel) + '\n')
 	myfile.write('number of considered states of schroedinger equation = ' + str(nocs) + '\n')
+	myfile.write('exchange correlation = ' + str(exchange_correlation_term) + '\n')
 	myfile.write('calculation time = ' + str(time_ex) + 'sec\n')
-	myfile.write('fermi level = ' + str(ef))
+	myfile.write('fermi level = ' + str(ef) + '\n')
+	myfile.write('grid spacing = ' + str(gs))
 	myfile.close()
-	np.savetxt('x_array_' + str(nel) + '.out',x)
-	np.savetxt('x_q_array_' + str(nel) + '.out',x_q)
-	np.savetxt('eDens_array_' + str(nel) + '.out', eDens_array)
-	np.savetxt('pot_tot_array_' + str(nel) + '.out', pot_tot_array)
+	if exchange_correlation_term:
+		np.savetxt('eDens_array_ex_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', eDens_array*1e-24)
+	else: np.savetxt('eDens_array_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', eDens_array*1e-24)
+	if exchange_correlation_term:
+		np.savetxt('pot_tot_array_p_ex_' + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', pot_tot_array_p)
+	else: np.savetxt('pot_tot_array_p_' + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', pot_tot_array_p)
+	if exchange_correlation_term:
+		np.savetxt('Psi_ex_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', np.hstack([x_q,PSI.T]))
+	else: np.savetxt('Psi_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', np.hstack([x_q,PSI.T]))
 	print 'doping net charge = ', netCharge(doping_n_array, ss)
 	print 'eDensity net charge = ', netCharge(eDens_array, ss)
+	print 'total net charge = ', netCharge(doping_n_array, ss)-netCharge(eDens_array, ss)+netCharge(surface_charge_array, ss)
+	print 'fraction_in_dx_centers = ', fraction_in_dx_centers
+	print 'fraction_of_free_charges_on_surface = ', fraction_of_free_charges_on_surface
 	print 'converged at step', noit
 	print 'target error =', target_error
 	print 'error =', error
 	print 'number of elements =', nel
 	print 'number of considered states of schroedinger equation =', nocs
+	print 'exchange correlation =', exchange_correlation_term
 	print 'calculation time =', time_ex
-'''
 
