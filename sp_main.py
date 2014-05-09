@@ -21,7 +21,8 @@ from simulation_parameters import *
 sys.path.append(my_path_devices)
 if STRUCTURE == 'D110922B':
 	from D110922B import *
-
+if STRUCTURE == 'STRUCT1':
+	from STRUCT1 import *
 
 # get time program runs
 start_time = time.time()
@@ -95,9 +96,11 @@ epsilon_array = project(epsilon, V).vector().array()
 np.savetxt('epsilon_array_' + str(nel) + '.out',epsilon_array)
 doping_n = Doping_N()
 doping_n_array = project(doping_n, V).vector().array()
+print 'doping net charge', netCharge(doping_n_array,ss)
 np.savetxt('doping_n_array_' + str(nel) + '.out',doping_n_array*1e-24)
 surface_charge = Surface_N()
 surface_charge_array = project(surface_charge, V).vector().array()
+print 'surface net charge', netCharge(surface_charge_array,ss)
 
 ##################################
 
