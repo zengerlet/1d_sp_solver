@@ -3,6 +3,13 @@ import scipy.integrate as integ
 import scipy.constants as const
 import matplotlib.pyplot as plt
 
+def sigma_z(x_array, eDens_array):
+	'Calculation of sigma of electron density'
+	x_array = x_array.T[0,:]
+	z1 = (integ.simps(x_array*eDens_array,x_array)/integ.simps(eDens_array,x_array))**2
+	z2 = integ.simps(x_array**2*eDens_array,x_array)/integ.simps(eDens_array,x_array)
+	return np.sqrt(z2-z1)
+
 def normalize(f, ss):
 	'Normalize wave function'
 	N = integ.simps(f*f, dx=ss)
@@ -126,16 +133,18 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
 	'Output all relevant information and write into file'
 	if DEBUG and (DEBUG_level==1 or DEBUG_level==2):
 		plt.figure()
-		plt.plot(x, pot_tot_array_p)
+		plt.plot(x_q, pot_tot_array)
 		for k in xrange(nocs):
 			print "E[" + str(k) + "]=" + str(E[k])
 			plt.plot(x_q, PSI[k]/np.max(abs(PSI[k])) + E[k])
 		plt.title('Conduction band, wave functions, fermi level')	
 		plt.show()
-		
+	
+	# calculate sigma_z for file name
+	s_z = sigma_z(x_q, eDens_array)
 	if exchange_correlation_term:
-		myfile = open('output_ex_' + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.txt', 'w')
-	else: myfile = open('output_'  + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.txt', 'w')
+		myfile = open('output_ex_' + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) + '_' + str(round(s_z,3)) + '.txt', 'w')
+	else: myfile = open('output_'  + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) + '_' + str(round(s_z,3)) + '.txt', 'w')
 	myfile.write('doping net charge = ' + str(netCharge(doping_n_array, ss)) + '\n')
 	myfile.write('eDensity net charge = ' + str(-netCharge(eDens_array, ss)) + '\n') 
 	myfile.write('surface net charge = ' + str(netCharge(surface_charge_array, ss)) + '\n') 
@@ -152,17 +161,18 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
 	myfile.write('exchange correlation = ' + str(exchange_correlation_term) + '\n')
 	myfile.write('calculation time = ' + str(time_ex) + 'sec\n')
 	myfile.write('fermi level = ' + str(ef) + '\n')
-	myfile.write('grid spacing = ' + str(gs))
+	myfile.write('grid spacing = ' + str(gs) + '\n')
+	myfile.write('sigma_z = ' + str(s_z))
 	myfile.close()
 	if exchange_correlation_term:
-		np.savetxt('eDens_array_ex_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', eDens_array*1e-24)
-	else: np.savetxt('eDens_array_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', eDens_array*1e-24)
+		np.savetxt('eDens_array_ex_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) +  '_' + str(round(s_z,3)) + '.out', eDens_array*1e-24)
+	else: np.savetxt('eDens_array_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) +  '_' + str(round(s_z,3)) + '.out', eDens_array*1e-24)
 	if exchange_correlation_term:
-		np.savetxt('pot_tot_array_p_ex_' + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', pot_tot_array_p)
-	else: np.savetxt('pot_tot_array_p_' + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', pot_tot_array_p)
+		np.savetxt('pot_tot_array_p_ex_' + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) + '_' + str(round(s_z,3)) + '.out', pot_tot_array_p)
+	else: np.savetxt('pot_tot_array_p_' + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) + '_' + str(round(s_z,3)) + '.out', pot_tot_array_p)
 	if exchange_correlation_term:
-		np.savetxt('Psi_ex_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', np.hstack([x_q,PSI.T]))
-	else: np.savetxt('Psi_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(fraction_of_free_charges_on_surface) + '.out', np.hstack([x_q,PSI.T]))
+		np.savetxt('Psi_ex_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) + '_' + str(round(s_z,3)) + '.out', np.hstack([x_q,PSI.T]))
+	else: np.savetxt('Psi_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) + '_' + str(round(s_z,3)) + '.out', np.hstack([x_q,PSI.T]))
 	print 'doping net charge = ', netCharge(doping_n_array, ss)
 	print 'eDensity net charge = ', netCharge(eDens_array, ss)
 	print 'total net charge = ', netCharge(doping_n_array, ss)-netCharge(eDens_array, ss)+netCharge(surface_charge_array, ss)
@@ -174,5 +184,6 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
 	print 'number of elements =', nel
 	print 'number of considered states of schroedinger equation =', nocs
 	print 'exchange correlation =', exchange_correlation_term
+	print 'sigma_z =', s_z
 	print 'calculation time =', time_ex
 

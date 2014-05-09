@@ -24,7 +24,6 @@ from D110922B import *
 # get time program runs
 start_time = time.time()
 
-
 #### Built framework for FEM solver ####
 
 # Initialize sub-domain instances

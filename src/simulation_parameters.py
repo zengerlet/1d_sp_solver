@@ -1,6 +1,6 @@
 #### Global simulation parameters ####
 
-nel = 10000						# Number of elements
+nel = 40000						# Number of elements
 nomaxit = 1500 					# maximum number of iteration
 nocs = 3						# number of considered states
 t = 1.3 						# temperature

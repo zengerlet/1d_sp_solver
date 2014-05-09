@@ -263,7 +263,6 @@ surf = fraction_of_free_charges_on_surface*(dop_1+dop_2)
 s_width = .5
 
 
-
 print 'grid spacing =', gs
 print 'exchange correlation term =', exchange_correlation_term
 print 'charge neutral =', charge_neutral
