@@ -19,7 +19,9 @@ from simulation_parameters import *
 
 # Import structure
 sys.path.append(my_path_devices)
-from D110922B import *
+if STRUCTURE == 'D110922B':
+	from D110922B import *
+
 
 # get time program runs
 start_time = time.time()
@@ -111,7 +113,11 @@ if DEBUG and (DEBUG_level==1 or DEBUG_level==2):
 
 
 # Define Dirichlet boundary conditions for Poisson equation at left and right boundaries
-bcs = [DirichletBC(V, 0.0, boundaries, 1)]
+if BCT == 'd_vn':
+	bcs = [DirichletBC(V, 0.0, boundaries, 1)]
+
+if BCT == 'vn_d':
+	bcs = [DirichletBC(V, 0.0, boundaries, 2)]
 
 # slope on rhs
 g_R = Constant('0.0')
@@ -137,7 +143,6 @@ eDens1_array = np.zeros(nelq+1)
 Psi = np.zeros([nocs, nelq+1])
 
 
-
 #### Schroedinger Poisson ####
 noit = 0
 error_p1 = 0
@@ -153,12 +158,13 @@ while noit < nomaxit:
 	# update pot_tot 
 	pot_tot_array_p = bandE_array - u_p1_array
 	
-	'''
-	# calculate offset to keep band at left hand side to 0.53eV
-	pot_tot_array_p = pot_tot_array_p - pot_tot_array_p[0] + v_schottky
-	'''
-	# for charge neutral. set lhs of conduction band to 0ev
-	pot_tot_array_p = pot_tot_array_p - pot_tot_array_p[0]
+	if BCT == 'd_vn':
+		# for charge neutral. set lhs of conduction band to 0ev
+		pot_tot_array_p = pot_tot_array_p - pot_tot_array_p[0] + elhs
+	
+	if BCT == 'vn_d':
+		# for charge neutral. set lhs of conduction band to 0ev
+		pot_tot_array_p = pot_tot_array_p - pot_tot_array_p[-1] + erhs
 	
 	# go from larger grid from poisson equation to smaller grid for schroedinger equation and include exchange correlation term
 	

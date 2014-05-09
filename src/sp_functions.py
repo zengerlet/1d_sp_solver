@@ -133,7 +133,7 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
 	'Output all relevant information and write into file'
 	if DEBUG and (DEBUG_level==1 or DEBUG_level==2):
 		plt.figure()
-		plt.plot(x_q, pot_tot_array)
+		plt.plot(x, pot_tot_array_p)
 		for k in xrange(nocs):
 			print "E[" + str(k) + "]=" + str(E[k])
 			plt.plot(x_q, PSI[k]/np.max(abs(PSI[k])) + E[k])
