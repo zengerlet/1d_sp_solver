@@ -3,8 +3,8 @@ import numpy as np
 import scipy.integrate as integ
 import scipy.constants as const
 import matplotlib.pyplot as plt
-import time
-import sys
+import time, sys, os
+my_path = os.path.dirname(os.path.realpath(__file__))
 
 # Parameter for Fenics
 parameters['reorder_dofs_serial'] = False
@@ -15,6 +15,10 @@ start_time = time.time()
 # Import function from following path
 sys.path.append('/home/thomas/polybox/Semester_8/SA/code/cleanup/src')
 from sp_functions import *
+
+# Import global simulation parameters
+sys.path.append('/home/thomas/polybox/Semester_8/SA/code/cleanup')
+from simulation_parameters import *
 
 # Import structure
 sys.path.append('/home/thomas/polybox/Semester_8/SA/code/cleanup/devices')

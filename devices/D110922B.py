@@ -6,9 +6,14 @@ import matplotlib.pyplot as plt
 import time
 import sys
 
-# Import material constants from following path
+# Import function and material constants from following path
 sys.path.append('/home/thomas/polybox/Semester_8/SA/code/cleanup/src')
+from sp_functions import *
 from material_const import *
+
+# Import global simulation parameters
+sys.path.append('/home/thomas/polybox/Semester_8/SA/code/cleanup')
+from simulation_parameters import *
 
 
 # Define sub-domains and boundaries
@@ -174,6 +179,7 @@ class Surface_N(Expression):
 		value[0] = -exp(-x[0]/s_width)*surf/s_width
 
 
+
 #### Define Layers ####
 
 DopingWidth = 0.5
@@ -252,40 +258,13 @@ fraction_of_free_charges_on_surface = (-2.75376+(1-fraction_in_dx_centers)*55.53
 print 'fraction_in_dx_centers = ', fraction_in_dx_centers
 print 'fraction_of_free_charges_on_surface = ', fraction_of_free_charges_on_surface
 
-
-
-#### General Parameter ####
-
-#dmax = 450.0 					# Total thickess of structure in nm
-nel = 10000						# Number of elements
-nomaxit = 1500 					# maximum number of iteration
 ss = dmax/nel*1e-9 				# Step size for integration
 gs = dmax/nel					# Grid spacing
-nocs = 3						# number of considered states
-t = 1.3 						# temperature
-v_schottky = 0.53				# schottky barrier
-alpha = 0.5	 					# initial mixing factor for poisson solution
-interactive_alpha = True 		# interactively adjusting alpha
-beta = 1.   					# initial mixing factor for eDensity solution
-interactive_beta = False 		# interactively adjusting beta
-target_error_p = 1e-6 			# traget error for poisson equation
-target_error_d = 1e18 			# traget error for eDensity
-# Define region where to solve schroedinger equation
-#dqleft = 200
-#dqright = 280
-dqleft = 100
-dqright = 400
-exchange_correlation_term = False 	# use exchange correlation term
-charge_neutral = True				# if true Fermi-level is calculated considering charge neutraliy
-e_fix = 0.							# fix Fermi-level (requires charge_neutral = False)
-
-DEBUG = False					# debug mode. DEBUG = False -> no plots
-DEBUG_level = 1
-
 
 print 'grid spacing =', gs
 print 'exchange correlation term =', exchange_correlation_term
 print 'charge neutral =', charge_neutral
+
 
 
 #### Doping ####
