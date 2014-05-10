@@ -8,5 +8,5 @@
 *.png
 
 # ignore file for simulation parameters
-simulation_parameters.py
+src/simulation_parameters.py
 
