@@ -6,7 +6,5 @@
 *.txt
 *.out
 *.png
-
-# ignore file for simulation parameters
-src/simulation_parameters.py
-
+# ignore simulation parameters
+simulation_parameters.py
