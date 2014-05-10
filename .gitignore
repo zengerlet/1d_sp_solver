@@ -6,5 +6,4 @@
 *.txt
 *.out
 *.png
-# ignore simulation parameters
-simulation_parameters.py
+
