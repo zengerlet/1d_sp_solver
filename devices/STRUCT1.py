@@ -26,59 +26,59 @@ fraction_of_free_charges_on_surface = (-2.+(1-fraction_in_dx_centers)*12.69)/((1
 
 # Define sub-domains and boundaries
 class Boundary_Left(SubDomain):
-	def inside(self, x, on_boundary):
-		return near(x[0], 0.0)
+    def inside(self, x, on_boundary):
+        return near(x[0], 0.0)
 
 class Boundary_Right(SubDomain):
-	def inside(self, x, on_boundary):
-		return near(x[0], dmax)
+    def inside(self, x, on_boundary):
+        return near(x[0], dmax)
 
 class Q_Domain(SubDomain):
-	def inside(self, x, on_boundary):
-		return between(x[0], (dqleft, dqright))
+    def inside(self, x, on_boundary):
+        return between(x[0], (dqleft, dqright))
 
 class Effective_Mass(Expression):
-	def eval(self, value, x):
-		if between(x[0], layer1):
-			value[0] = GaAsnn['meff']
-		if between(x[0], layer2):
-			value[0] = Al24Ga76Asnn['meff']
-		if between(x[0], layer3):
-			value[0] = GaAsnn['meff']
-		if between(x[0], layer4):
-			value[0] = Al24Ga76Asnn['meff']
-		
+    def eval(self, value, x):
+        if between(x[0], layer1):
+            value[0] = GaAsnn['meff']
+        if between(x[0], layer2):
+            value[0] = Al24Ga76Asnn['meff']
+        if between(x[0], layer3):
+            value[0] = GaAsnn['meff']
+        if between(x[0], layer4):
+            value[0] = Al24Ga76Asnn['meff']
+        
 class Epsilon(Expression):
-	def eval(self, value, x):
-		if between(x[0], layer1):
-			value[0] = GaAsnn['eps']
-		if between(x[0], layer2):
-			value[0] = Al24Ga76Asnn['eps']
-		if between(x[0], layer3):
-			value[0] = GaAsnn['eps']
-		if between(x[0], layer4):
-			value[0] = Al24Ga76Asnn['eps']
+    def eval(self, value, x):
+        if between(x[0], layer1):
+            value[0] = GaAsnn['eps']
+        if between(x[0], layer2):
+            value[0] = Al24Ga76Asnn['eps']
+        if between(x[0], layer3):
+            value[0] = GaAsnn['eps']
+        if between(x[0], layer4):
+            value[0] = Al24Ga76Asnn['eps']
 
 
 class Band_Energy(Expression):
-	def eval(self, value, x):
-		if between(x[0], layer1):
-			value[0] = GaAsnn['cb_e']
-		if between(x[0], layer2):
-			value[0] = Al24Ga76Asnn['cb_e']
-		if between(x[0], layer3):
-			value[0] = GaAsnn['cb_e']
-		if between(x[0], layer4):
-			value[0] = Al24Ga76Asnn['cb_e']
-			
+    def eval(self, value, x):
+        if between(x[0], layer1):
+            value[0] = GaAsnn['cb_e']
+        if between(x[0], layer2):
+            value[0] = Al24Ga76Asnn['cb_e']
+        if between(x[0], layer3):
+            value[0] = GaAsnn['cb_e']
+        if between(x[0], layer4):
+            value[0] = Al24Ga76Asnn['cb_e']
+            
 
 class Doping_N(Expression):
-	def eval(self, value, x):
-		value[0] = exp(-(x[0]-d_pos1)*(x[0]-d_pos1)/2.0/(d_width1*d_width1))*dop_1/(d_width1*np.sqrt(2*np.pi))
+    def eval(self, value, x):
+        value[0] = exp(-(x[0]-d_pos1)*(x[0]-d_pos1)/2.0/(d_width1*d_width1))*dop_1/(d_width1*np.sqrt(2*np.pi))
 
 class Surface_N(Expression):
-	def eval(self, value, x):
-		value[0] = -exp(-x[0]/s_width)*surf/s_width
+    def eval(self, value, x):
+        value[0] = -exp(-x[0]/s_width)*surf/s_width
 
 
 
@@ -86,19 +86,19 @@ class Surface_N(Expression):
 
 dmax = 1625.7
 
-layer1 = (0.0,			# GaAs
-	      10.)	
-layer2 = (10., 		# AlGaAs
-		  320.)	
-layer3 = (320., 			# GaAs
-		  360.)			
-layer4 = (360., 			#AlGaAs
-		  dmax)	
+layer1 = (0.0,            # GaAs
+          10.)    
+layer2 = (10.,         # AlGaAs
+          320.)    
+layer3 = (320.,             # GaAs
+          360.)            
+layer4 = (360.,             #AlGaAs
+          dmax)    
 
 
 
-ss = dmax/nel*1e-9 				# Step size for integration
-gs = dmax/nel					# Grid spacing
+ss = dmax/nel*1e-9                 # Step size for integration
+gs = dmax/nel                    # Grid spacing
 
 
 #### Doping ####
@@ -108,7 +108,7 @@ d_width1 = .15
 
 #fraction_in_dx_centers = 0.892
 #fraction_in_dx_centers = 0
-dop_1 = (1.0-fraction_in_dx_centers)*12.69e24 				
+dop_1 = (1.0-fraction_in_dx_centers)*12.69e24                 
 
 
 ### Surface charge ###
