@@ -4,9 +4,9 @@ STRUCTURE = 'STRUCT1'
 
 #### Global simulation parameters ####
 
-nel = 10000							# Number of elements
+nel = 30000							# Number of elements
 nomaxit = 1500 						# maximum number of iteration
-nocs = 5							# number of considered states
+nocs = 4							# number of considered states
 t = 1.3 							# temperature
 alpha = 0.1	 						# initial mixing factor for poisson solution
 interactive_alpha = False 			# interactively adjusting alpha

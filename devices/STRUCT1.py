@@ -104,7 +104,7 @@ gs = dmax/nel					# Grid spacing
 #### Doping ####
 # Define doping layers
 d_pos1 = 250.
-d_width1 = 1.5
+d_width1 = .15
 
 #fraction_in_dx_centers = 0.892
 #fraction_in_dx_centers = 0
