@@ -7,3 +7,6 @@
 *.out
 *.png
 
+# ignore file for simulation parameters
+simulation_parameters.py
+
