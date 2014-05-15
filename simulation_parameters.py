@@ -1,13 +1,13 @@
 #### Considered Stucture ####
-STRUCTURE = 'STRUCT1'
+STRUCTURE = 'D110620C'
 
 
 #### Global simulation parameters ####
 
-nel = 30000							# Number of elements
+nel = 10000							# Number of elements
 nomaxit = 1500 						# maximum number of iteration
 nocs = 4							# number of considered states
-t = 1.3 							# temperature
+t = 10e-3 							# temperature
 alpha = 0.1	 						# initial mixing factor for poisson solution
 interactive_alpha = False 			# interactively adjusting alpha
 beta = 0.1   						# initial mixing factor for eDensity solution
@@ -32,9 +32,9 @@ erhs = 0						# energy of conduction band rhs for BCT = 'vn_d'
 
 #### Define region where to solve schroedinger equation ####
 dqleft = 200
-dqright = 380
+dqright = 500
 
 #### Debug ####
 
-DEBUG = False					# debug mode. DEBUG = False -> no plots
+DEBUG = True                                    # debug mode. DEBUG = False -> no plots
 DEBUG_level = 1					# Debug level 1: some plots, Debug level 2: all plots

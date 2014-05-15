@@ -15,8 +15,8 @@ AlAsnn =            {'meff': 0.15, 'eps': 10.064, 'cb_e': 4.049}
 AlxGa(1-x)As
 #http://www.ioffe.ru/SVA/NSM/Semicond/AlGaAs/bandstr.html
 Conduction band discontinuity:
-    x<0.41       ΔEc = 0.79x (eV)
-    x>0.41       ΔEc = 0.475-0.335x+0.143x2 (eV) 
+    x<0.41       dEc = 0.79x (eV)
+    x>0.41       dEc = 0.475-0.335x+0.143x2 (eV) 
 
 @300K
 http://www.ioffe.ru/SVA/NSM/Semicond/AlGaAs/basic.html
@@ -24,10 +24,10 @@ Dielectric constant (static)    12.90-2.84x
 Effective electron mass me  0.063+0.083x mo (x<0.45)
 '''
 
-GaAsff =            {'meff': 0.063000, 'eps': 12.900, 'cb_e': 0.00000}				
-Al1708Ga8292ff =    {'meff': 0.077176, 'eps': 12.415, 'cb_e': 0.13493}				
-Al1952Ga8048ff =    {'meff': 0.079202, 'eps': 12.346, 'cb_e': 0.15421}				
-Al20Ga80ff =        {'meff': 0.079600, 'eps': 12.332, 'cb_e': 0.15800}				
-Al2379Ga7621ff =    {'meff': 0.082746, 'eps': 12.224, 'cb_e': 0.18794}				
-Al24a76ff =         {'meff': 0.082920, 'eps': 12.218, 'cb_e': 0.18960}				
-Al244Ga756ff =      {'meff': 0.083252, 'eps': 12.207, 'cb_e': 0.19276}				
+GaAsff =              {'meff': 0.063000, 'eps': 12.900, 'cb_e': 0.00000}				
+Al1708Ga8292Asff =    {'meff': 0.077176, 'eps': 12.415, 'cb_e': 0.13493}				
+Al1952Ga8048Asff =    {'meff': 0.079202, 'eps': 12.346, 'cb_e': 0.15421}				
+Al20Ga80Asff =        {'meff': 0.079600, 'eps': 12.332, 'cb_e': 0.15800}				
+Al2379Ga7621Asff =    {'meff': 0.082746, 'eps': 12.224, 'cb_e': 0.18794}				
+Al24a76Asff =         {'meff': 0.082920, 'eps': 12.218, 'cb_e': 0.18960}				
+Al244Ga756Asff =      {'meff': 0.083252, 'eps': 12.207, 'cb_e': 0.19276}				

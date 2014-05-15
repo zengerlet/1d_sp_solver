@@ -23,6 +23,9 @@ if STRUCTURE == 'D110922B':
     from D110922B import *
 if STRUCTURE == 'STRUCT1':
     from STRUCT1 import *
+if STRUCTURE == 'D110620C':
+    from D110620C import *
+
 
 # get time program runs
 start_time = time.time()
