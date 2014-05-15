@@ -129,7 +129,7 @@ def V_ex(eDens_array, epsilon_array_q, m_eff_array_q):
 
 def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, time_ex, noit, target_error, 
                 error, nocs, E, PSI, ss, gs, nomaxit, exchange_correlation_term, DEBUG, DEBUG_level, 
-                fraction_in_dx_centers, fraction_of_free_charges_on_surface, surface_charge_array):
+                fraction_in_dx_centers, fraction_of_free_charges_on_surface, surface_charge_array, temp):
     'Output all relevant information and write into file'
     if DEBUG and (DEBUG_level==1 or DEBUG_level==2):
         plt.figure()
@@ -162,7 +162,8 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
     myfile.write('calculation time = ' + str(time_ex) + 'sec\n')
     myfile.write('fermi level = ' + str(ef) + '\n')
     myfile.write('grid spacing = ' + str(gs) + '\n')
-    myfile.write('sigma_z = ' + str(s_z))
+    myfile.write('sigma_z = ' + str(s_z) + '\n')
+    myfile.write('temperature = ' + str(temp))
     myfile.close()
     if exchange_correlation_term:
         np.savetxt('eDens_array_ex_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) +  '_' + str(round(s_z,3)) + '.out', eDens_array*1e-24)
@@ -185,5 +186,6 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
     print 'number of considered states of schroedinger equation =', nocs
     print 'exchange correlation =', exchange_correlation_term
     print 'sigma_z =', s_z
+    print 'temperature = ', temp
     print 'calculation time =', time_ex
 
