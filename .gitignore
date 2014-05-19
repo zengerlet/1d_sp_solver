@@ -1,9 +1,12 @@
-# ignore all files ending with ~
+# ignore all files ending with ~ .pyc .out .txt .png
 *~
 *.py~ 
-# ignore all files ending with .pyc .out .txt
 *.pyc
 *.txt
 *.out
 *.png
+# ignore sim folder
+sim/
+# ignore output folders
+output*/
 

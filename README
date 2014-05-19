@@ -1,0 +1,26 @@
+1D Schroeding Poisson Solver - README
+
+
+
+########## DEVICES ##########
+In the folder /devices one can specify the structure for the calculation. The file has to contain the following expression classes:
+
+    Effective_Mass
+    Epsilon
+    Band_Energy
+    Doping_N
+    Surface_N
+
+Please note that the expressions has to be defined at any point within the structure. The material parameters for the expressions Effective_Mass, Epsilon and Band_energy are specified in the file /src/material_const.py.
+
+
+########## SIMULATION PARAMETERS ##########
+The global simulation parameters as well as the considered structure can be set in the file simulation_parameters.py
+
+
+########## RUN A SIMULATION ##########
+A simulation is started with the following command 'python sp_main.py param1 param2', where param1, param2 are specific properties of the structure (fraction of not ionized donors, ...) which can for example be defined as in the example of /devices/D110922B.py.
+
+
+
+
