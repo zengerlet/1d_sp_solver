@@ -1,6 +1,6 @@
 #### Considered Stucture ####
-STRUCTURE = 'D110620C'
-
+#STRUCTURE = 'D110620C'
+STRUCTURE = 'D110620C_m2'
 
 #### Global simulation parameters ####
 

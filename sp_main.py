@@ -25,6 +25,8 @@ if STRUCTURE == 'STRUCT1':
     from STRUCT1 import *
 if STRUCTURE == 'D110620C':
     from D110620C import *
+if STRUCTURE == 'D110620C_m2':
+    from D110620C_m2 import *
 
 
 # get time program runs
