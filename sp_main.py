@@ -264,7 +264,8 @@ while noit < nomaxit:
         plt.plot(x,test_array)
         plt.show()
 
-    
+        
+
     ###################### Poisson ######################
         
     # Define variational form

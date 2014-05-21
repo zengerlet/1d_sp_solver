@@ -3,6 +3,16 @@ import scipy.integrate as integ
 import scipy.constants as const
 import matplotlib.pyplot as plt
 
+def wf_weights(WF_array, EV, nocs, ef, temp):
+    WF_weights = np.zeros(nocs)
+    for i in xrange(nocs-1,-1,-1):
+        exparg = -(EV[i] - ef)*const.e/const.k/temp
+        # approximate for large arguments
+        if exparg > 100.:
+            WF_weights[i] = exparg
+        else: WF_weights[i] = np.log(1 + np.exp(exparg))
+    return WF_weights
+
 def sigma_z(x_array, eDens_array):
     'Calculation of sigma of electron density'
     x_array = x_array.T[0,:]
@@ -25,16 +35,11 @@ def netCharge(DOP_array, ss):
 def eDensity(WF_array, m_eff_array_q, EV, ef, temp, nelq, nocs, oW=False):
     'Calculate eDensity from wave functions considering fermi-dirac distribution and density of states'
     density = np.zeros(nelq + 1)
-
+    Weights = wf_weights(WF_array, EV, nocs, ef, temp)
     for i in xrange(nocs-1,-1,-1):
-        exparg = -(EV[i] - ef)*const.e/const.k/temp
-        # approximate for large arguments
-        if exparg > 100.:
-            expof = exparg
-        else: expof = np.log(1 + np.exp(exparg))
-        if oW:
-            print 'Weight of WF', i+1, expof
-        density = density + WF_array[i]**2*expof
+        density = density + WF_array[i]**2*Weights[i]
+    if oW:
+        print 'Weights of wave functions = ', Weights
     # multiply by constants and density of states 
     DOS = m_eff_array_q*const.m_e/const.pi/const.hbar**2
     density = density*temp*const.k*DOS
@@ -152,6 +157,7 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
     myfile.write('fraction_in_dx_centers = ' + str(fraction_in_dx_centers) + '\n')
     myfile.write('fraction_of_free_charges_on_surface = ' + str(fraction_of_free_charges_on_surface) + '\n')
     myfile.write('eigenvalues = ' + str(E) + '\n')
+    myfile.write('final weights of wavefunctions = ' + str(wf_weights(PSI, E, nocs, ef, temp)) + '\n')
     myfile.write('converged at step ' + str(noit) + '\n')
     myfile.write('max number of iterations = ' + str(nomaxit) + '\n')
     myfile.write('target error = ' + str(target_error) + '\n')
@@ -179,6 +185,8 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
     print 'total net charge = ', netCharge(doping_n_array, ss)-netCharge(eDens_array, ss)+netCharge(surface_charge_array, ss)
     print 'fraction_in_dx_centers = ', fraction_in_dx_centers
     print 'fraction_of_free_charges_on_surface = ', fraction_of_free_charges_on_surface
+    print 'eigenvalues = ', E
+    print 'final weights of wavefunctions = ', wf_weights(PSI, E, nocs, ef, temp)
     print 'converged at step', noit
     print 'target error =', target_error
     print 'error =', error
