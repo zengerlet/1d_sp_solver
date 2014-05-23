@@ -11,7 +11,8 @@ In the folder /devices one can specify the structure for the calculation. The fi
     Doping_N
     Surface_N
 
-Please note that the expressions has to be defined at any point within the structure. The material parameters for the expressions Effective_Mass, Epsilon and Band_energy are specified in the file /src/material_const.py.
+Please note that the expressions have to be defined at any point within the structure (from 0 to dmax). The material parameters for the expressions Effective_Mass, Epsilon and Band_energy are specified in the file /src/material_const.py.
+
 
 
 ########## SIMULATION PARAMETERS ##########

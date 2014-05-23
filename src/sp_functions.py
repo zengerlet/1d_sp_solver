@@ -4,8 +4,10 @@ import scipy.constants as const
 import matplotlib.pyplot as plt
 
 def wf_weights(WF_array, EV, nocs, ef, temp):
+    """ Helper function to calculate the exponential part of the delectron density """
     WF_weights = np.zeros(nocs)
-    for i in xrange(nocs-1,-1,-1):
+    # sum up small values (exponential factor for higher energies) first to prevent from numerical errors
+    for i in xrange(nocs-1,-1,-1):  
         exparg = -(EV[i] - ef)*const.e/const.k/temp
         # approximate for large arguments
         if exparg > 100.:
@@ -14,26 +16,26 @@ def wf_weights(WF_array, EV, nocs, ef, temp):
     return WF_weights
 
 def sigma_z(x_array, eDens_array):
-    'Calculation of sigma of electron density'
+    """ Calculation of sigma of electron density """
     x_array = x_array.T[0,:]
     z1 = (integ.simps(x_array*eDens_array,x_array)/integ.simps(eDens_array,x_array))**2
     z2 = integ.simps(x_array**2*eDens_array,x_array)/integ.simps(eDens_array,x_array)
     return np.sqrt(z2-z1)
 
 def normalize(f, ss):
-    'Normalize wave function'
+    """ Normalize wave function """
     N = integ.simps(f*f, dx=ss)
     c = 1.0/np.sqrt(N)
     f_norm = c*f
     return f_norm
 
 def netCharge(DOP_array, ss):
-    'Integrate charge density array in z-direction'
+    """ Integrate charge density array in z-direction """
     DOP_net_charge = integ.simps(DOP_array, dx=ss) 
     return DOP_net_charge
 
 def eDensity(WF_array, m_eff_array_q, EV, ef, temp, nelq, nocs, oW=False):
-    'Calculate eDensity from wave functions considering fermi-dirac distribution and density of states'
+    """ Calculate eDensity from wave functions considering fermi-dirac distribution and density of states """
     density = np.zeros(nelq + 1)
     Weights = wf_weights(WF_array, EV, nocs, ef, temp)
     for i in xrange(nocs-1,-1,-1):
@@ -46,9 +48,9 @@ def eDensity(WF_array, m_eff_array_q, EV, ef, temp, nelq, nocs, oW=False):
     return density
     
 def findFermi(net_Doping, WF_array, EV, m_eff_array_q, temp, ss, nelq, nocs):
-    'Find fermi level using charge neutrality'
+    """ Find fermi level using charge neutrality condition """
     intervalok = True
-    #start with ef_min = 0.0, ef_max = 1.0
+    #start with ef_min = -1.0, ef_max = 1.0
     ef_min = -1.0
     ef_max = 1.0
     # check if given interval is ok
@@ -57,7 +59,7 @@ def findFermi(net_Doping, WF_array, EV, m_eff_array_q, temp, ss, nelq, nocs):
     net_Density_min = -netCharge(D_ef_min, ss) + net_Doping
     net_Density_max = -netCharge(D_ef_max, ss) + net_Doping
     
-    # extend interval if necessary
+    # extend initial interval if necessary
     ei = 0
     while (net_Density_max < 0 and net_Density_min < 0) or (net_Density_max > 0 and net_Density_min > 0):
         if net_Density_max < 0 and net_Density_min < 0:
@@ -103,7 +105,6 @@ def findFermi(net_Doping, WF_array, EV, m_eff_array_q, temp, ss, nelq, nocs):
             break
         ii += 1
 
-            
     # check if converged
     D_ef_final = eDensity(WF_array, m_eff_array_q, EV, ef_max, temp, nelq, nocs)
     net_Density_final = -netCharge(D_ef_final, ss)  + net_Doping
@@ -115,7 +116,7 @@ def findFermi(net_Doping, WF_array, EV, m_eff_array_q, temp, ss, nelq, nocs):
     return ef_max
     
 def V_ex(eDens_array, epsilon_array_q, m_eff_array_q):
-    'Exchange correlation term'
+    """ Exchange correlation term """
     
     a_star = 4.0*np.pi*const.epsilon_0*epsilon_array_q*(const.hbar**2)/(const.m_e*m_eff_array_q*const.e**2)
     r_s_inv = np.where(eDens_array>0., ((4.0/3*np.pi*a_star**3*eDens_array)**(1./3.)), 0.)
@@ -123,19 +124,12 @@ def V_ex(eDens_array, epsilon_array_q, m_eff_array_q):
     V_ex = (-2.0*Ry_star)/(np.pi**(2.0/3)*(4.0/9)**(1.0/3))*r_s_inv + \
             (-2.0*Ry_star)/(np.pi**(2.0/3)*(4.0/9)**(1.0/3))*(0.7734/21)*np.log(1.0 + 21.0*r_s_inv)
     
-    '''
-    plt.figure()
-    plt.plot(V_ex/const.e)
-    plt.title('exchange correlation potential')
-    plt.show()
-    #print 1/r_s_inv
-    '''
     return V_ex
 
 def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, time_ex, noit, target_error, 
                 error, nocs, E, PSI, ss, gs, nomaxit, exchange_correlation_term, DEBUG, DEBUG_level, 
                 fraction_in_dx_centers, fraction_of_free_charges_on_surface, surface_charge_array, temp):
-    'Output all relevant information and write into file'
+    """ Output all relevant information and write into file """
     if DEBUG and (DEBUG_level==1 or DEBUG_level==2):
         plt.figure()
         plt.plot(x, pot_tot_array_p)

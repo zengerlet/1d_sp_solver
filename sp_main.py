@@ -17,6 +17,8 @@ from sp_functions import *
 from material_const import *
 from simulation_parameters import *
 
+
+##### Add new devices here #####
 # Import structure
 sys.path.append(my_path_devices)
 if STRUCTURE == 'D110922B':
@@ -45,7 +47,6 @@ mesh = IntervalMesh(nel,0.0,dmax)
 # array for mesh
 x = mesh.coordinates()
 np.savetxt('x_array_' + str(nel) + '.out',x)
-
 
 # Initialize mesh function for boundaries and domains
 boundaries = FacetFunction("size_t", mesh)
@@ -91,7 +92,6 @@ if DEBUG and (DEBUG_level==1 or DEBUG_level==2):
     plt.plot(x, bandE_array)
     plt.title('Conduction band')
 
-
 # Define constants and functions for variational form of Poisson equation
 c1 = Constant('1e18') # convert m into nm
 c2 = Constant(const.e/const.epsilon_0)
@@ -107,9 +107,6 @@ surface_charge = Surface_N()
 surface_charge_array = project(surface_charge, V).vector().array()
 print 'surface net charge', netCharge(surface_charge_array,ss)
 
-##################################
-
-
 if DEBUG and (DEBUG_level==1 or DEBUG_level==2):
     plt.figure()
     plt.plot(x, doping_n_array)
@@ -119,7 +116,6 @@ if DEBUG and (DEBUG_level==1 or DEBUG_level==2):
     plt.title('Surface charge')
     plt.show()
 
-
 # Define Dirichlet boundary conditions for Poisson equation at left and right boundaries
 if BCT == 'd_vn':
     bcs = [DirichletBC(V, 0.0, boundaries, 1)]
@@ -127,9 +123,6 @@ if BCT == 'd_vn':
 if BCT == 'vn_d':
     bcs = [DirichletBC(V, 0.0, boundaries, 2)]
 
-# slope on rhs
-g_R = Constant('0.0')
-   
 # Define measures
 ds = Measure("ds")[boundaries]
 dx = Measure("dx")[domains]
@@ -151,14 +144,16 @@ eDens1_array = np.zeros(nelq+1)
 Psi = np.zeros([nocs, nelq+1])
 
 
-#### Schroedinger Poisson ####
-noit = 0
-error_p1 = 0
+#### Schroedinger Poisson iteration ####
+
+# Define variables needed for iteration
+noit = 0            # number of current iteration
+error_p1 = 0        # variables for error calculation in poisson equation
 error_p2 = 0
-ierror_p = 0
-error_d1 = 0
-error_d2 = 0
-ierror_d = 0
+ierror_p = 0        # helper variable for interactive alpha
+error_d1 = 0        # varialbes for error calculation in electron density
+error_d2 = 0        
+ierror_d = 0        # helper variable for interactive beta
 while noit < nomaxit:
     
     ###################### Schroedinger ######################
@@ -175,7 +170,6 @@ while noit < nomaxit:
         pot_tot_array_p = pot_tot_array_p - pot_tot_array_p[-1] + erhs
     
     # go from larger grid from poisson equation to smaller grid for schroedinger equation and include exchange correlation term
-    
     if exchange_correlation_term:
         pot_tot_array = pot_tot_array_p[q_mesh.data().array('parent_vertex_indices', 0)] + V_ex(eDens1_array, epsilon_array_q, m_eff_array_q)/const.e
     else: pot_tot_array = pot_tot_array_p[q_mesh.data().array('parent_vertex_indices', 0)]
@@ -197,7 +191,7 @@ while noit < nomaxit:
     h = (h1*inner(1.0/m_eff*grad(uq), grad(vq))*dx_q(0) + (pot_tot)*uq*vq*dx_q(0))
     m = (uq*vq*dx_q(0))
 
-    # Assemble stiffness form
+    # Assemble matrices
     H = PETScMatrix()
     M = PETScMatrix()
     assemble(h, tensor=H)
@@ -208,7 +202,7 @@ while noit < nomaxit:
     eigensolver.parameters["spectrum"]="smallest real"
     #eigensolver.parameters["solver"]="lapack"
 
-    # Compute all eigenvalues of A x = \lambda x
+    # Compute smalles real eigenvalues of A x = \lambda x
     print "Computing eigenvalues. This can take a minute."
     eigensolver.solve(nocs)
 
@@ -225,7 +219,6 @@ while noit < nomaxit:
         E.append(r)
         dex += 1
     
-
     print 'eigenvalues =', E
     
     ### Density calculation
@@ -272,10 +265,7 @@ while noit < nomaxit:
     F = ((doping_n - eDensp + surface_charge)*c2*v*dx(0) + (doping_n - eDensp + surface_charge)*c2*v*dx(1))
     a = (c1*inner(epsilon*grad(u), grad(v))*dx(0) + c1*inner(epsilon*grad(u), grad(v))*dx(1))
     
-    # Solve problem
-    '''
-    solve(a == F, u_p2, bcs)
-    '''
+    # Solve problem using PETSc conjugate gradient solver
     solve(a == F, u_p2, bcs=bcs,
         solver_parameters={"linear_solver": "cg"})    
 
@@ -303,7 +293,7 @@ while noit < nomaxit:
         
         ierror_p += 1
     
-    # interactive alpha
+    # interactive beta
     if interactive_beta:
         # refine beta if convergence is not monotonous
         if (error_d2 - error_d1) > 0 and noit != 0:
