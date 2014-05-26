@@ -34,7 +34,22 @@ Al24a76Asff =         {'meff': 0.082920, 'eps': 12.218, 'cb_e': 0.18960}
 Al244Ga756Asff =      {'meff': 0.083252, 'eps': 12.207, 'cb_e': 0.19276}				
 
 
-# values from paper ???
+#sadao adachi
+'''
+AlxGa(1-x)As
+
+Density-of-states electron mass
+conduction  0.067 + 0.083x
+
+Static dielectric constants
+13.18 - 3.12x
+
+Conduction band offset
+DeltaEc(x) = 0.43 + 0.14x   for 0.45 < x < 1.0
+DeltaEc(x) = 1.1x           for 0 < x <0.45
+'''
+
+#vurgaftman
 Al244Ga756Asmax =     {'meff': 0.083252, 'eps': 12.207, 'cb_e': 0.23760}				
 
 

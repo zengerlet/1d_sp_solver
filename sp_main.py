@@ -267,8 +267,8 @@ while noit < nomaxit:
     
     # Solve problem using PETSc conjugate gradient solver
     solve(a == F, u_p2, bcs=bcs,
-        solver_parameters={"linear_solver": "cg"})    
-
+        solver_parameters={"linear_solver": linear_solver})    
+    
     # convert solution to numpy array
     u_p2_array = u_p2.vector().array()
     error_p2 = max(abs(u_p2_array - u_p1_array))
@@ -318,7 +318,7 @@ while noit < nomaxit:
         time_ex = time.time() - start_time
         plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens1_array, nel, ef, time_ex, 
                     noit, target_error_p, error_p2, nocs, E, Psi, ss, gs, nomaxit, exchange_correlation_term, 
-                    DEBUG, DEBUG_level, fraction_in_dx_centers, fraction_of_free_charges_on_surface, surface_charge_array, t)
+                    DEBUG, DEBUG_level, fraction_in_dx_centers, fraction_of_free_charges_on_surface, surface_charge_array, t, linear_solver)
         break
 
     # update error
