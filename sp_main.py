@@ -200,7 +200,7 @@ while noit < nomaxit:
     # Create eigensolver
     eigensolver = SLEPcEigenSolver(H,M)
     eigensolver.parameters["spectrum"]="smallest real"
-    #eigensolver.parameters["solver"]="lapack"
+    eigensolver.parameters["solver"] = slepc_eigensolver
 
     # Compute smalles real eigenvalues of A x = \lambda x
     print "Computing eigenvalues. This can take a minute."

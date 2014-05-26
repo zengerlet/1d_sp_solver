@@ -17,21 +17,36 @@ target_error_d = 1e18 				                # traget error for eDensity
 exchange_correlation_term = True 	                        # use exchange correlation term
 charge_neutral = True				                # if true Fermi-level is calculated considering charge neutraliy
 e_fix = 0.							# fix Fermi-level (requires charge_neutral = False)
-linear_solver = "petsc"                                         # choose linear solver algorithm                            
-                                                                     # "petsc", 'PETSc builtin LU solver'
-                                                                     # "cg", 'Conjugate gradient method',
-                                                                     # "gmres", 'Generalized minimal residual method',
-                                                                     # "minres", 'Minimal residual method',
-                                                                     # "tfqmr", 'Transpose-free quasi-minimal residual method',
-                                                                     # "richardson", 'Richardson method',
-                                                                     # "bicgstab", 'Biconjugate gradient stabilized method'
+
+
+#### Linear Solvers ####
+'''
+choose linear solver algorithm                            
+    "petsc", 'PETSc builtin LU solver'
+    "cg", 'Conjugate gradient method',
+    "gmres", 'Generalized minimal residual method',
+    "minres", 'Minimal residual method',
+    "tfqmr", 'Transpose-free quasi-minimal residual method',
+    "richardson", 'Richardson method',
+    "bicgstab", 'Biconjugate gradient stabilized method'
+'''
+linear_solver = "petsc"
+
+
+#### Eigenvalue Solvers ####
+'''
+choose eigenvalue solver algorithm
+    "arnoldi" (Arnoldi) 
+    "krylov-schur" (Krylov-Schur) 
+'''
+slepc_eigensolver = "krylov-schur"
 
 
 #### Boundary Condition ####
 '''
 Types of Boundary condition:
-	d_vn: Dirichlet at lhs of structure and von Neumann at rhs
-	vn_d: Dirichlet at rhs of structure and von Neumann at lhs
+        d_vn: Dirichlet at lhs of structure and von Neumann at rhs
+        vn_d: Dirichlet at rhs of structure and von Neumann at lhs
 '''
 BCT = 'd_vn'					                # boundary condition type
 elhs = 0						        # energy of conduction band lhs for BCT = 'd_vn'
