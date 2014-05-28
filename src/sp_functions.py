@@ -128,7 +128,7 @@ def V_ex(eDens_array, epsilon_array_q, m_eff_array_q):
 
 def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, time_ex, noit, target_error_p, 
                 error_p, target_error_d, error_d, nocs, E, PSI, ss, gs, nomaxit, exchange_correlation_term, DEBUG, DEBUG_level, 
-                fraction_in_dx_centers, fraction_of_free_charges_on_surface, surface_charge_array, temp, linear_solver):
+                fraction_in_dx_centers, fraction_of_free_charges_on_surface, surface_charge_array, temp, linear_solver, surface_charge_on):
     """ Output all relevant information and write into file """
     if DEBUG and (DEBUG_level==1 or DEBUG_level==2):
         plt.figure()
@@ -166,7 +166,8 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
     myfile.write('grid spacing = ' + str(gs) + '\n')
     myfile.write('sigma_z = ' + str(s_z) + '\n')
     myfile.write('temperature = ' + str(temp) + '\n')
-    myfile.write('linear solver = ' + str(linear_solver))
+    myfile.write('linear solver = ' + str(linear_solver) + '\n')
+    myfile.write('surface charge = ' + str(surface_charge_on))
     myfile.close()
     if exchange_correlation_term:
         np.savetxt('eDens_array_ex_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) +  '_' + str(round(s_z,3)) + '.out', eDens_array*1e-24)
@@ -195,5 +196,6 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
     print 'sigma_z =', s_z
     print 'temperature = ', temp
     print 'linear solver = ', linear_solver
+    print 'surface charge = ', surface_charge_on
     print 'calculation time =', time_ex
 
