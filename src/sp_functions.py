@@ -126,8 +126,8 @@ def V_ex(eDens_array, epsilon_array_q, m_eff_array_q):
     
     return V_ex
 
-def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, time_ex, noit, target_error, 
-                error, nocs, E, PSI, ss, gs, nomaxit, exchange_correlation_term, DEBUG, DEBUG_level, 
+def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, time_ex, noit, target_error_p, 
+                error_p, target_error_d, error_d, nocs, E, PSI, ss, gs, nomaxit, exchange_correlation_term, DEBUG, DEBUG_level, 
                 fraction_in_dx_centers, fraction_of_free_charges_on_surface, surface_charge_array, temp, linear_solver):
     """ Output all relevant information and write into file """
     if DEBUG and (DEBUG_level==1 or DEBUG_level==2):
@@ -154,8 +154,10 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
     myfile.write('final weights of wavefunctions = ' + str(wf_weights(PSI, E, nocs, ef, temp)) + '\n')
     myfile.write('converged at step ' + str(noit) + '\n')
     myfile.write('max number of iterations = ' + str(nomaxit) + '\n')
-    myfile.write('target error = ' + str(target_error) + '\n')
-    myfile.write('error = ' + str(error) + '\n')
+    myfile.write('target error poisson = ' + str(target_error_p) + '\n')
+    myfile.write('error poisson = ' + str(error_p) + '\n')
+    myfile.write('target error electron density = ' + str(target_error_d) + '\n')
+    myfile.write('error electron density = ' + str(error_d) + '\n')
     myfile.write('number of elements = ' + str(nel) + '\n')
     myfile.write('number of considered states of schroedinger equation = ' + str(nocs) + '\n')
     myfile.write('exchange correlation = ' + str(exchange_correlation_term) + '\n')
@@ -183,8 +185,10 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
     print 'eigenvalues = ', E
     print 'final weights of wavefunctions = ', wf_weights(PSI, E, nocs, ef, temp)
     print 'converged at step', noit
-    print 'target error =', target_error
-    print 'error =', error
+    print 'target error_p =', target_error_p
+    print 'error_p =', error_p
+    print 'target error_d =', target_error_d
+    print 'error_d =', error_d
     print 'number of elements =', nel
     print 'number of considered states of schroedinger equation =', nocs
     print 'exchange correlation =', exchange_correlation_term
