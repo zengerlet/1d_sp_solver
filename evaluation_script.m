@@ -1,3 +1,6 @@
+clear all;
+close all;
+
 files = dir('*.out');
 
 % load all files

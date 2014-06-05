@@ -144,31 +144,37 @@ def plot_output(x, x_q, pot_tot_array_p, doping_n_array, eDens_array, nel, ef, t
     if exchange_correlation_term:
         myfile = open('output_ex_' + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) + '_' + str(round(s_z,3)) + '.txt', 'w')
     else: myfile = open('output_'  + str(nel) + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) + '_' + str(round(s_z,3)) + '.txt', 'w')
-    myfile.write('doping net charge = ' + str(netCharge(doping_n_array, ss)) + '\n')
-    myfile.write('eDensity net charge = ' + str(-netCharge(eDens_array, ss)) + '\n') 
-    myfile.write('surface net charge = ' + str(netCharge(surface_charge_array, ss)) + '\n') 
-    myfile.write('total net charge = ' + str(netCharge(doping_n_array, ss)-netCharge(eDens_array, ss)+netCharge(surface_charge_array, ss)) + '\n')
+    doping_sheet_density_cm = netCharge(doping_n_array, ss)*1e-4
+    myfile.write('doping sheet density = ' + str('%.6e' % doping_sheet_density_cm) + ' cm^-2\n')  # convert from m^-2 to cm^-2 and write to output file
+    electron_sheet_density_cm = -netCharge(eDens_array, ss)*1e-4
+    myfile.write('electron sheet density = ' + str('%.6e' % electron_sheet_density_cm) + ' cm^-2\n') 
+    surface_charge_sheet_density_cm = netCharge(surface_charge_array, ss)*1e-4
+    myfile.write('surface charge sheet density = ' + str('%.6e' % surface_charge_sheet_density_cm) + ' cm^-2\n') 
+    total_sheet_density_cm = (netCharge(doping_n_array, ss)-netCharge(eDens_array, ss)+netCharge(surface_charge_array, ss))*1e-4
+    myfile.write('total sheet density = ' + str('%.6e' % total_sheet_density_cm) + ' cm^-2\n')
     myfile.write('fraction_in_dx_centers = ' + str(fraction_in_dx_centers) + '\n')
     myfile.write('fraction_of_free_charges_on_surface = ' + str(fraction_of_free_charges_on_surface) + '\n')
-    myfile.write('eigenvalues = ' + str(E) + '\n')
+    myfile.write('eigenvalues = ' + str(E) + ' eV\n')
     myfile.write('final weights of wavefunctions = ' + str(wf_weights(PSI, E, nocs, ef, temp)) + '\n')
     myfile.write('converged at step ' + str(noit) + '\n')
     myfile.write('max number of iterations = ' + str(nomaxit) + '\n')
-    myfile.write('target error poisson = ' + str(target_error_p) + '\n')
-    myfile.write('error poisson = ' + str(error_p) + '\n')
-    myfile.write('target error electron density = ' + str(target_error_d) + '\n')
-    myfile.write('error electron density = ' + str(error_d) + '\n')
+    myfile.write('target error poisson = ' + str(target_error_p) + ' V\n')
+    myfile.write('error poisson = ' + str(error_p) + ' V\n')
+    myfile.write('target error electron density = ' + str(target_error_d) + ' m^-3\n')
+    myfile.write('error electron density = ' + str(error_d) + ' m^-3\n')
     myfile.write('number of elements = ' + str(nel) + '\n')
     myfile.write('number of considered states of schroedinger equation = ' + str(nocs) + '\n')
     myfile.write('exchange correlation = ' + str(exchange_correlation_term) + '\n')
-    myfile.write('calculation time = ' + str(time_ex) + 'sec\n')
-    myfile.write('fermi level = ' + str(ef) + '\n')
-    myfile.write('grid spacing = ' + str(gs) + '\n')
-    myfile.write('sigma_z = ' + str(s_z) + '\n')
-    myfile.write('temperature = ' + str(temp) + '\n')
+    myfile.write('calculation time = ' + str(time_ex) + ' sec\n')
+    myfile.write('fermi level = ' + str(ef) + ' eV\n')
+    myfile.write('grid spacing = ' + str(gs) + ' nm\n')
+    myfile.write('sigma_z = ' + str(s_z) + ' nm\n')
+    myfile.write('temperature = ' + str(temp) + ' K\n')
     myfile.write('linear solver = ' + str(linear_solver) + '\n')
     myfile.write('surface charge = ' + str(surface_charge_on))
     myfile.close()
+    
+    # save file with electron density array in 1e24 m^-3 or equivalent 1e18 cm^-3
     if exchange_correlation_term:
         np.savetxt('eDens_array_ex_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) +  '_' + str(round(s_z,3)) + '.out', eDens_array*1e-24)
     else: np.savetxt('eDens_array_' + str(nel)  + '_' + str(fraction_in_dx_centers) + '_' + str(round(fraction_of_free_charges_on_surface,3)) +  '_' + str(round(s_z,3)) + '.out', eDens_array*1e-24)
